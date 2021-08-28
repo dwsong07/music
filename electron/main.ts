@@ -1,6 +1,9 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
 import isDev from "electron-is-dev";
+import installExtension, {
+    REACT_DEVELOPER_TOOLS,
+} from "electron-devtools-installer";
 import ipc from "./ipc";
 
 function createWindow() {
@@ -26,6 +29,14 @@ app.whenReady().then(() => {
     app.on("activate", () => {
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+
+    if (isDev) {
+        installExtension(REACT_DEVELOPER_TOOLS)
+            .then((name) => console.log(`${name} extension added`))
+            .catch((err) =>
+                console.error(`Error occurred when installing extension ${err}`)
+            );
+    }
 
     ipc();
 });
