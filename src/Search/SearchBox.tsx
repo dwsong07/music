@@ -1,29 +1,27 @@
-import { useState } from "react";
-import ytsr from "ytsr";
+import { observer } from "mobx-react";
+import { useStore } from "../stores";
 
 function SearchBox() {
-    const [search, setSearch] = useState("");
-    const [searchResult, setSearchResult] = useState<ytsr.Result>(
-        {} as ytsr.Result
-    );
+    const {
+        searchStore: { searchText, setSearchText, setSearchResult },
+    } = useStore();
 
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
+        setSearchText(e.target.value);
     };
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const searchResult = await window.electronApi.search(search);
+        const searchResult = await window.electronApi.search(searchText);
         setSearchResult(searchResult);
-        console.log(searchResult);
     };
 
     return (
         <form onSubmit={onSubmit}>
             <input
                 placeholder="검색"
-                value={search}
+                value={searchText}
                 onChange={onSearchChange}
             />
             <button type="submit">검색</button>
@@ -31,4 +29,4 @@ function SearchBox() {
     );
 }
 
-export default SearchBox;
+export default observer(SearchBox);
