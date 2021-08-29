@@ -1,10 +1,9 @@
-import { observer } from "mobx-react";
-import { useStore } from "../stores";
+import { useHistory } from "react-router-dom";
+import { useState } from "react";
 
 function SearchBox() {
-    const {
-        searchStore: { searchText, setSearchText, setSearchResult },
-    } = useStore();
+    const [searchText, setSearchText] = useState("");
+    const history = useHistory();
 
     const onSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchText(e.target.value);
@@ -13,8 +12,7 @@ function SearchBox() {
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const searchResult = await window.electronApi.search(searchText);
-        setSearchResult(searchResult);
+        history.push(`/search/${encodeURIComponent(searchText)}`);
     };
 
     return (
@@ -29,4 +27,4 @@ function SearchBox() {
     );
 }
 
-export default observer(SearchBox);
+export default SearchBox;

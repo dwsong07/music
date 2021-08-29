@@ -1,29 +1,44 @@
-import { observer } from "mobx-react";
+import { useEffect, useState } from "react";
 import ytsr from "ytsr";
-import { useStore } from "../stores";
 
-function SearchList() {
-    const {
-        searchStore: { searchResult },
-    } = useStore();
+interface SearchListProps {
+    text: string;
+}
 
-    const videos = searchResult?.items.filter(
-        (item) => item.type === "video"
-    ) as ytsr.Video[];
+function SearchList({ text }: SearchListProps) {
+    const [searchResult, setSearchResult] = useState<ytsr.Video[] | null>();
+
+    useEffect(() => {
+        const fetchResult = async () => {
+            const searchedApiResult = await window.electronApi.search(text);
+            setSearchResult(
+                searchedApiResult?.items.filter(
+                    (item) => item.type === "video"
+                ) as ytsr.Video[]
+            );
+        };
+        fetchResult();
+    }, [text]);
 
     return (
         <ul>
-            {videos ? (
-                videos.map((item) => (
+            {searchResult ? (
+                searchResult.map((item) => (
                     <li key={item.id}>
+                        <img
+                            src={item.thumbnails[0].url ?? ""}
+                            alt={item.title}
+                            width="70px"
+                            height="70px"
+                        />
                         <a href={item.url}>{item.title}</a>
                     </li>
                 ))
             ) : (
-                <div></div>
+                <div>Searching..</div>
             )}
         </ul>
     );
 }
 
-export default observer(SearchList);
+export default SearchList;

@@ -1,11 +1,16 @@
-import SearchBox from "./SearchBox";
+import { RouteComponentProps } from "react-router-dom";
 import SearchList from "./SearchList";
 
-function Search() {
+interface MatchParams {
+    text: string;
+}
+
+function Search({ match }: RouteComponentProps<MatchParams>) {
+    const { text } = match.params;
+
     return (
         <div>
-            <SearchBox />
-            <SearchList />
+            <SearchList text={text} />
         </div>
     );
 }
