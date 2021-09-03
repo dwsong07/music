@@ -39,7 +39,7 @@ app.whenReady().then(() => {
     }
 
     for (const key in ipc) {
-        console.log(key, ipc[key])
+        console.log(key, ipc[key]);
         ipcMain.handle(key, ipc[key]);
     }
 });

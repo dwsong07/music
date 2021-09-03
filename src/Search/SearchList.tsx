@@ -10,7 +10,10 @@ function SearchList({ text }: SearchListProps) {
 
     useEffect(() => {
         const fetchResult = async () => {
-            const searchedApiResult = await window.electronApi.invoke("video_search", text);
+            const searchedApiResult = await window.electronApi.invoke(
+                "video_search",
+                text
+            );
 
             setSearchResult(
                 searchedApiResult?.filter(
