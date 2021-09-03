@@ -9,9 +9,11 @@ export default function () {
     app.use(cors());
 
     app.get("/", (req, res) => {
-        const videoUrl = decodeURIComponent(req.query.video_url as string);
+        const videoUrl = req.query.video_url as string;
 
-        ytdl(videoUrl, { filter: "audioonly" }).pipe(res);
+        if (!videoUrl) return res.status(400).send("video url is undefined");
+
+        ytdl(decodeURIComponent(videoUrl), { filter: "audioonly" }).pipe(res);
     });
 
     const listener = app.listen(0, () => {
