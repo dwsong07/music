@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import isDev from "electron-is-dev";
 import installExtension, {
@@ -38,7 +38,10 @@ app.whenReady().then(() => {
             );
     }
 
-    ipc();
+    for (const key in ipc) {
+        console.log(key, ipc[key])
+        ipcMain.handle(key, ipc[key]);
+    }
 });
 
 app.on("window-all-closed", () => {

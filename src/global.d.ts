@@ -1,9 +1,8 @@
-import ytsr from "ytsr";
-
 declare global {
     interface Window {
         electronApi: {
-            search: (str: string) => ytsr.Result;
+            invoke: (channel: string, arg: any) => any;
+            receive: (channel: string, callback: (arg: any) => any) => void;
         };
     }
 }

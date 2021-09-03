@@ -1,18 +1,22 @@
-import { ipcMain } from "electron";
+import { IpcMainInvokeEvent } from "electron";
 import ytsr from "ytsr";
 
-export default function () {
-    ipcMain.on("YTDL_VIDEO_SEARCH", async (e, text: string) => {
-        try {
-            if (!text) return;
+interface IIpc {
+    [key: string]: (e: IpcMainInvokeEvent, args: any) => any;
+}
 
-            const searchResult = await ytsr(text, {
+export default {
+    "video_search": async (e, arg: string) => {
+        try {
+            if (!arg) return;
+
+            const searchResult = await ytsr(arg, {
                 pages: 1,
             });
 
-            e.reply("YTDL_VIDEO_SEARCH_REPLY", searchResult);
+            return searchResult.items;
         } catch (err) {
             console.error(err);
         }
-    });
-}
+    }
+} as IIpc;

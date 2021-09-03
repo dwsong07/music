@@ -10,9 +10,10 @@ function SearchList({ text }: SearchListProps) {
 
     useEffect(() => {
         const fetchResult = async () => {
-            const searchedApiResult = await window.electronApi.search(text);
+            const searchedApiResult = await window.electronApi.invoke("video_search", text);
+
             setSearchResult(
-                searchedApiResult?.items.filter(
+                searchedApiResult?.filter(
                     (item) => item.type === "video"
                 ) as ytsr.Video[]
             );

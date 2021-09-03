@@ -1,13 +1,22 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 export const api = {
-    search: (str: string) =>
-        new Promise((resolve) => {
-            ipcRenderer.send("YTDL_VIDEO_SEARCH", str);
-            ipcRenderer.once("YTDL_VIDEO_SEARCH_REPLY", (e, result) => {
-                resolve(result);
-            });
-        }),
+    invoke: async (channel: string, arg: any) => {
+        const validChannels = ["video_search"];
+
+        if (validChannels.includes(channel)) {
+            return await ipcRenderer.invoke(channel, arg);
+        }
+    },
+    receive: (channel: string, callback: (arg: any) => any) => {
+        const validChannels: string[] = [];
+
+        if (validChannels.includes(channel)) {
+            ipcRenderer.on(channel, (event, arg) => {
+                callback(arg);
+            })
+        }
+    }
 };
 
 contextBridge.exposeInMainWorld("electronApi", api);
