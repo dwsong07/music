@@ -1,5 +1,6 @@
 import { IpcMainInvokeEvent } from "electron";
 import ytsr from "ytsr";
+import ytdl from "ytdl-core";
 import audioServer from "./audioServer";
 
 let usedPort: number;
@@ -29,5 +30,12 @@ export default {
         }
 
         return usedPort;
+    },
+    get_video_info: async (e, videoUrl: string) => {
+        try {
+            return await ytdl.getInfo(videoUrl);
+        } catch (err) {
+            console.error(err);
+        }
     },
 } as IIpc;

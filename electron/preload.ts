@@ -1,8 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
+import ipc from "./ipc";
 
 export const api = {
     invoke: async (channel: string, arg: any) => {
-        const validChannels = ["video_search", "audio_server_start"];
+        const validChannels = Object.keys(ipc);
 
         if (validChannels.includes(channel)) {
             return await ipcRenderer.invoke(channel, arg);
