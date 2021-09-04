@@ -1,17 +1,23 @@
+import { observer } from "mobx-react";
+import { useStore } from "../stores";
+
 interface PlayerProps {
     videoUrl: string;
-    audioPort: number;
 }
 
-function Player({ videoUrl, audioPort }: PlayerProps) {
+function Player({ videoUrl }: PlayerProps) {
+    const {
+        audioStore: { port },
+    } = useStore();
+
     return (
         <div>
             <audio
-                src={`http://localhost:${audioPort}/?video_url=${videoUrl}`}
+                src={`http://localhost:${port}/?video_url=${videoUrl}`}
                 controls
             />
         </div>
     );
 }
 
-export default Player;
+export default observer(Player);
